@@ -1,0 +1,23 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Bevezetés
+
+A `{ggplot2}` nagyszerű funkcióinak használatához a következő előkészítő lépésekre van szükség:
+
+- Telepítenünk kell a számítógéünkre az R statisztikai programcsomagot, amely letölthető a [https://cran.r-project.org/](https://cran.r-project.org/) címről.
+- Telepítenünk kell az RStudio fejlesztői környezetet, amely letölthető a [https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/) címről.
+- El kell indítanunk az RStudio programot.
+- Létre kell hoznunk egy új projektet az RStudio-ban. Ezt a `File -> New Project` menüpont alatt tehetjük meg. A projektet a `New Directory` opcióval hozhatjuk létre. Válasszuk a `New Project` opciót, majd adjuk meg a projektkönyvtár nevét és helyét. Most feltételezzük, hogy a projekt neve `kesz_abrak` és a helye a `C:/Users/Public/Documents` könyvtárban van. A projekt létrehozása után a RStudio megnyitja a projektet, és a projekt könyvtárában lévő fájlokat jeleníti meg.
+- Létre kell hoznunk egy új R szkript fájlt. Ezt a `File -> New File -> R Script` menüpont alatt tehetjük meg. Ezt a fájlt a `kesz_abrak` projekt könyvtárában hozzuk létre. A fájl neve legyen `abrak_publikalasa.R`.
+- A `kesz_abrak` projekt könyvtárában hozzunk létre egy új almappát, amelynek a neve `adat` legyen. Ebben az almappában tároljuk majd az ábrák létrehozásához szükséges adatokat. Amennyiben már rendelkezünk az adatokkal, akkor másoljuk be azokat ebbe az almappába. Ha az adataink jamovi `.omv` állományban állnak rendelkezésre, akkor azokat a jamovi program segítségével exportálhatjuk ki ebbe az almappába. Használjuk az SPSS `.sav` formátumot. 
+
+- A `kesz_abrak` projekt könyvtárában hozzunk létre egy új almappát, amelynek a neve `output` legyen, majd ebben hozzunk létre egy `kep` nevű almappát. Ebben az almappában tároljuk majd az elkészített ábrákat.
+
+
+A fenti előkészítés után már készen állunk az ábrák létrehozására. Az első lépésben gondoskodni fogunk a `{ggplot2}` csomag telepítéséről és betöltéséről. A következő lépésben pedig megismerkedünk a `{ggplot2}` csomag nagyszerű funkcióival.
+
+**A következő fejezetekben minden R parancsot az `abrak_publikalasa.R` nevű szkriptállományba írjunk, és a {{< kbd Ctrl+Enter >}} billentyűkombinációval futtassuk le azokat.**

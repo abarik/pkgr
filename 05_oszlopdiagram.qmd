@@ -1,0 +1,764 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Oszlopdiagram
+
+## Egydimenziós oszlopdiagram
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Smoke` változó a dohányzásra vonatkozó kérdésre adott válaszokat tartalmazza. Rajzoljuk meg a dohányzási szokás eloszlását. Jellemezzük az eloszlást leíró, számszerű értékekkel is.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk,
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke, ordered = T)   
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Smoke",
+                  freq = TRUE)
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák abszolút gyakoriságát jelenítjük meg**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke)) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(fill="#dcdcdc", col="#2e2e2e") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  aes(label = after_stat(count)), vjust = -0.5) +
+        # az y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 200)) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Gyakoriság") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_01.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 4.1
+#| fig.asp: 0.8
+#| out.width: '65%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+
+### Publikációkész ábra - 2.
+
+Újabb ábrát készítünk. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=after_stat(count/sum(count)))) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(fill="#dcdcdc", col="#2e2e2e") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "count", vjust = -0.5, size=2.6,
+                  aes(label = 
+                        scales::percent(after_stat(count/sum(count)),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Százalékos gyakoriság") +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # az y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 1)) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_02.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 4.1
+#| fig.asp: 0.8
+#| out.width: '65%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+## Kétdimenziós oszlopdiagram
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Smoke` változó a dohányzásra vonatkozó kérdésre adott válaszokat tartalmazza. A `Sex` változó a nemet tartalmazza. Rajzoljuk meg a dohányzási szokás és a nem kapcsolatát. Jellemezzük az eloszlást leíró, számszerű értékekkel is.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a nem változó (`Sex`) nominális, így faktorrá kell alakítanunk,
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk,
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe,
+-   azokkal a személyekkel nem szeretnénk elemzést végezni, akiknek nincs megadva a nemük, vagy nem ismerjük a dohányzási szokásukat, így ezeket a sorokat kiszűrjük az adatbázisból.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Sex <- factor(d$Sex)       
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke)
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+# kiszűrjük azokat a személyeket,akiknek nincs megadva a nemük vagy a dohányzási szokásuk
+d <- d |> dplyr::filter(!is.na(Sex) & !is.na(Smoke))
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Smoke",
+                  splitBy = "Sex",
+                  freq = TRUE)
+```
+
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::contTables(data = d,
+                rows = "Sex",
+                cols = "Smoke",
+                pcRow = T, pcCol = T, pcTot = T)
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük az ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák abszolút gyakoriságát jelenítjük meg**. Az x tengelyen jelenítjük meg a dohányzási szokásokat, a kitöltés paraméterrel a nemeket különböztetjük meg, és az azonos dohányzási kategóriához tartozó gyakoriságokat **egymásra halmozzuk**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, fill=Sex)) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="stack") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#D9D9D9", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  aes(label = after_stat(count)), 
+                  position = position_stack(vjust = 0.5)) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Gyakoriság", fill="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_03.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 4.1
+#| fig.asp: 0.7
+#| out.width: '65%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Újabb publikációkész ábrát készítünk. Most is olyan megjelenítést választottunk, amelyben **az egyes kategóriák abszolút gyakoriságát jelenítjük meg**. Az x tengelyen azonban a nemeket jelenítjük meg, a kitöltés paraméterrel a dohányzási szokásokat különböztetjük meg, és az azonos nemhez tartozó gyakoriságokat **egymásra halmozzuk**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Sex, fill=Smoke)) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="stack") + 
+        # az x tengely beállítása
+        scale_x_discrete(labels=c(Female="Nő", Male="Férfi")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#E9E9E9", "#C9C9C9", "#A9A9A9", "#898989"),
+                          na.translate = FALSE, 
+                          labels=c(Never="Soha", 
+                                   Occas="Alkalmi", 
+                                   Regul="Rendszeres",
+                                   Heavy="Erős")) + 
+        # gyakoriságok megjelenítése  
+        geom_text(stat = "count", size=2.6,
+                  aes(label = after_stat(count)), 
+                  position = position_stack(vjust = 0.5)) +
+        # feliratok hozzáadása
+        labs(x = "Nem", y = "Gyakoriság", fill="Dohányzás") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_04.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 4.1
+#| fig.asp: 0.7
+#| out.width: '65%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák abszolút gyakoriságát jelenítjük meg**. Az x tengelyen jelenítjük meg a dohányzási szokásokat, a kitöltés paraméterrel a nemeket különböztetjük meg és **egymás melletti oszlopokba** írjuk őket.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, fill=Sex)) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="dodge") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#D9D9D9", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  aes(label = after_stat(count)), 
+                  position=position_dodge(width=0.95), vjust=-0.4) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Gyakoriság", fill="Nem") +
+        # y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 110)) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_05.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 4.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák abszolút gyakoriságát jelenítjük meg**. Az x tengelyen jelenítjük meg a nemeket, a kitöltés paraméterrel a dohányzási szokásokat különböztetjük meg és **egymás melletti oszlopokba** írjuk őket.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Sex, fill=Smoke)) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="dodge") + 
+        # az x tengely beállítása
+        scale_x_discrete(labels=c(Female="Nő", Male="Férfi")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#E9E9E9", "#C9C9C9", "#A9A9A9", "#898989"),
+                          na.translate = FALSE, 
+                          labels=c(Never="Soha", 
+                                   Occas="Alkalmi", 
+                                   Regul="Rendszeres",
+                                   Heavy="Erős")) + 
+        # gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  aes(label = after_stat(count)), 
+                  position=position_dodge(width=0.95), vjust=-0.4) +
+        # y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 110)) +
+        # feliratok hozzáadása
+        labs(x = "Nem", y = "Gyakoriság", fill="Dohányzás") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_06.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+
+### Publikációkész ábra - 5.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg a teljes mintára vonatkoztatva (a megjelenített százalékos értékek összege 100%)**. Az x tengelyen jelenítjük meg a dohányzási szokásokat, a kitöltés paraméterrel a nemeket különböztetjük meg, és az azonos dohányzási kategóriába tartozó százalékos gyakoriságokat **egymásra halmozzuk**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, fill=Sex, y=after_stat(count/sum(count)))) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="stack") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#D9D9D9", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  position = position_stack(vjust = 0.5),
+                  aes(label = 
+                        scales::percent(after_stat(count/sum(count)),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Százalékos gyakoriság (total)", fill="Nem") +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_07.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+
+### Publikációkész ábra - 6.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg a teljes mintára vonatkoztatva (a megjelenített százalékos értékek összege 100%)**. Az x tengelyen jelenítjük meg a nemeket, a kitöltés paraméterrel a dohányzási szokásokat különböztetjük meg, és az azonos nemhez tartozó százalékos gyakoriságokat **egymásra halmozzuk**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Sex, fill=Smoke, y=after_stat(count/sum(count)))) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="stack") + 
+        # az x tengely beállítása
+        scale_x_discrete(labels=c(Female="Nő", Male="Férfi")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#E9E9E9", "#C9C9C9", "#A9A9A9", "#898989"),
+                          na.translate = FALSE, 
+                          labels=c(Never="Soha", 
+                                   Occas="Alkalmi", 
+                                   Regul="Rendszeres",
+                                   Heavy="Erős")) + 
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6, 
+                  position = position_stack(vjust = 0.5),
+                  aes(label = 
+                        scales::percent(after_stat(count/sum(count)),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # feliratok hozzáadása
+        labs(x = "Nem", y = "Százalékos gyakoriság (total)", fill="Dohányzás") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_08.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 7.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg a teljes mintára vonatkoztatva (a megjelenített százalékos értékek összege 100%)**. Az x tengelyen jelenítjük meg a dohányzási szokásokat, a kitöltés paraméterrel a nemeket különböztetjük meg, és az azonos dohányzási kategóriába tartozó százalékos gyakoriságokat **egymás mellett** jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, fill=Sex, y=after_stat(count/sum(count)))) +
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="dodge") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#D9D9D9", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  position=position_dodge(width=0.95), vjust=-0.4,
+                  aes(label = 
+                        scales::percent(after_stat(count/sum(count)),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 0.5)) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Százalékos gyakoriság (total)", fill="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_09.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 8.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg a teljes mintára vonatkoztatva (a megjelenített százalékos értékek összege 100%)**. Az x tengelyen jelenítjük meg a nemeket, a kitöltés paraméterrel a dohányzási szokásokat különböztetjük meg, és az azonos nemhez tartozó százalékos gyakoriságokat **egymás mellett** jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Sex, fill=Smoke, y=after_stat(count/sum(count)))) +
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="dodge") + 
+        # az x tengely beállítása
+        scale_x_discrete(labels=c(Female="Nő", Male="Férfi")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#E9E9E9", "#C9C9C9", "#A9A9A9", "#898989"),
+                          na.translate = FALSE, 
+                          labels=c(Never="Soha", 
+                                   Occas="Alkalmi", 
+                                   Regul="Rendszeres",
+                                   Heavy="Erős")) + 
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "count", size=2.6,
+                  position=position_dodge(width=0.95), vjust=-0.4,
+                  aes(label = 
+                        scales::percent(after_stat(count/sum(count)),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 0.5)) +
+        # feliratok hozzáadása
+        labs(x = "Nem", y = "Százalékos gyakoriság (total)", fill="Dohányzás") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_10.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 9.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg az x tengelyen szereplő faktor egyes kategóriára vonatkoztatva (az x tengely minden egyes kategóriájában a megjelenített százalékos értékek összege 100%)**. Az x tengelyen jelenítjük meg a dohányzási szokásokat jelenítjük meg, a kitöltés paraméterrel a nemeket különböztetjük meg, és az azonos dohányzási szokáshoz tartozó százalékos gyakoriságokat **egymás mellett jelenítjük meg (ezek összege 100%)**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+library(GGally)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, fill=Sex, by=Smoke, y=after_stat(prop))) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", stat="prop", position="dodge") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#D9D9D9", "#898989"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "prop", size=2.6, col="black",
+                  position=position_dodge(width=0.95), vjust=-0.4,
+                  aes(label = 
+                        scales::percent(after_stat(prop),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 0.75)) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", fill = "Nem",
+             y = "Százalékos gyakoriság\n(dohányzási szokásonként vett)") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_11.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 10.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben **az egyes kategóriák százalékos relatív gyakoriságát jelenítjük meg az x tengelyen szereplő faktor egyes kategóriára vonatkoztatva (az x tengely minden egyes kategóriájában a megjelenített százalékos értékek összege 100%)**. Az x tengelyen jelenítjük meg a nemeket, a kitöltés paraméterrel a dohányzási szokásokat különböztetjük meg, és az azonos nemhez tartozó százalékos gyakoriságokat **egymás mellett jelenítjük meg (ezek összege 100%)**.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+library(GGally)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Sex, fill=Smoke, by=Sex, y=after_stat(prop))) + 
+        # oszlopdiagram kirajzolása
+        geom_bar(col="#2e2e2e", position="dodge", stat="prop") + 
+        # az x tengely beállítása
+        scale_x_discrete(labels=c(Female="Nő", Male="Férfi")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#D9D9D9", "#B9B9B9", "#999999", "#797979"),
+                          na.translate = FALSE, 
+                          labels=c(Never="Soha", 
+                                   Occas="Alkalmi", 
+                                   Regul="Rendszeres",
+                                   Heavy="Erős")) + 
+        # százalékos gyakoriságok megjelenítése
+        geom_text(stat = "prop", size=2.6, col="black",
+                  position=position_dodge(width=0.85), vjust=-0.4,
+                  aes(label = 
+                        scales::percent(after_stat(prop),
+                                        decimal.mark = ",", 
+                                        accuracy = 0.1))) +
+        # y tengely formázása
+        scale_y_continuous(labels = scales::percent) +
+        # y tengely láthatóságának beállítása
+        coord_cartesian(ylim = c(0, 0.95)) +
+        # feliratok hozzáadása
+        labs(x = "Nem", fill="Dohányzás",
+             y = "Százalékos gyakoriság\n(nemenként vett)") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/oszlopdiagram_012.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+

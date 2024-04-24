@@ -1,0 +1,518 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Hisztogram és barátai
+
+
+## Eloszlás egy csoportra
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza. A `Height` változó a magasságot tartalmazza cm-ben. Készítsünk hisztogramot és simított hisztogramot a magasság változóra. Vessük össze a normális eloszlás görbéjével.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges. Most sem.
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Height")
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most hisztogramon jelenítjük meg a változó eloszlását.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # hisztogram kirajzolása
+        geom_histogram(color = "black", fill = "#cccccc", binwidth = 5) + 
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y = "Gyakoriság") + 
+        # fekete-fehér stílus hozzáadása
+        theme_bw() 
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_01.png", plot = p1, 
+       units = "in", width = 6, height = 4, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most simított hisztogramon jelenítjük meg a változó eloszlását.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", fill = "#cccccc") + 
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) + 
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_02.png", plot = p1, 
+       units = "in", width = 6, height = 4, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most a hisztogramot és a simított hisztogramot összevetjük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height, after_stat(density))) + 
+        # hisztogram kirajzolása
+        geom_histogram(color = "black", fill = "#cccccc", binwidth = 5) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", linewidth=0.8) +
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+          
+  
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_03.png", plot = p1, 
+       units = "in", width = 6, height = 4, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 4.
+
+Elkészítjük a publikációkész ábrát. Most a simított hisztogramot összevetjük a normális eloszlás görbéjével (szaggatott vonal).
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black") + 
+        # normális eloszlás görbéjének kirajzolása
+        ggh4x::stat_theodensity(linewidth=0.8, linetype="dashed") +
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) + 
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_04.png", plot = p1, units = "in", width = 6, height = 4, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 5.
+
+Elkészítjük a publikációkész ábrát. Most a hisztogramot és a simított hisztogramot összevetjük a normális eloszlás görbéjével (szaggatott vonal).
+
+```{r}
+#| tidy: FALSE
+
+# adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # hisztogram kirajzolása
+        geom_histogram(aes(y=after_stat(density)), color = "black", fill = "#cccccc", binwidth = 5) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", linewidth=0.8) + 
+        # normális eloszlás görbéjének kirajzolása
+        ggh4x::stat_theodensity(linewidth=0.8, linetype="dashed") +
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) + 
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_05.png", plot = p1, units = "in", width = 6, height = 4, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+
+
+## Eloszlás több csoportra
+
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza. A `Height` változó a magasságot tartalmazza cm-ben. Készítsünk hisztogramot a magasság változóra a testmozgás gyakorisága (`Exer` változó) szerint csoportosítva.
+:::
+
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a testmozgás gyakoriságát tartalmazó változó (`Exer`) ordinális, így faktorrá kell alakítanunk
+-   rendezzük az ordinálissá alakított `Exer` változó szintjeit a természetes sorrendbe
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Exer <- factor(d$Exer, ordered = T)   
+# faktor szintjeinek rendezése
+d$Exer <- forcats::fct_relevel(d$Exer, "None", "Some", "Freq")
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Height",
+                  splitBy = "Exer")
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most hisztogramon jelenítjük meg a változó eloszlását a testmozgás gyakorisága szerint csoportosítva.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # hisztogram kirajzolása
+        geom_histogram(color = "black", fill = "#cccccc", binwidth = 5) + 
+        # csoportosítás a testmozgás gyakorisága szerint
+        facet_wrap(~ Exer, ncol = 1, 
+                   labeller = labeller(Exer = c(None="Nincs", Some="Kevés", Freq="Gyakori"))) +
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y = "Gyakoriság") + 
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_06.png", plot = p1, 
+       units = "in", width = 6, height = 10, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 1.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most simított hisztogramon jelenítjük meg a változó eloszlását a testmozgás gyakorisága szerint csoportosítva.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", fill = "#cccccc") + 
+        # csoportosítás a testmozgás gyakorisága szerint
+        facet_wrap(~ Exer, ncol = 1, 
+                   labeller = labeller(Exer = c(None="Nincs", Some="Kevés", Freq="Gyakori"))) + 
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_07.png", plot = p1, 
+       units = "in", width = 6, height = 10, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 1.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most az egyes csoportok simított hisztogramjait egyetlen ábrán jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height, fill=Exer)) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", alpha=0.4) + 
+        # kitöltőszín beállítása
+        scale_fill_grey(start=1, end=0, labels=c(None="Nincs", Some="Kevés", Freq="Gyakori")) +
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y = NULL, fill="Testmozgás") + 
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_08.png", plot = p1, 
+       units = "in", width = 6, height = 4, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 4.
+
+Elkészítjük a publikációkész ábrát. Most az egyes csoportok hisztogramját és simított hisztogramját egyetlen ábrán jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # hisztogram kirajzolása
+        geom_histogram(aes(y=after_stat(density)), color = "black", fill = "#cccccc", binwidth = 5) + 
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", linewidth=0.8) + 
+        # csoportosítás a testmozgás gyakorisága szerint
+        facet_wrap(~ Exer, ncol = 1, 
+                   labeller = labeller(Exer = c(None="Nincs", Some="Kevés", Freq="Gyakori"))) +
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_09.png", plot = p1, 
+       units = "in", width = 6, height = 10, dpi = 300, scale = 0.8)
+
+```
+
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 1.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 5.
+
+Elkészítjük a publikációkész ábrát. Most az egyes csoportok hisztogramját és a normális eloszlás gorbéjét is egyetlen ábrán jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height, y=after_stat(density))) + 
+        # hisztogram kirajzolása
+        geom_histogram(color = "black", fill = "#cccccc", binwidth = 5) + 
+        # normális eloszlás görbéjének kirajzolása
+        ggh4x::stat_theodensity(linewidth=0.8, linetype="dashed") +
+        # felosztás a testmozgás gyakorisága szerint
+        facet_wrap(~ Exer, ncol = 1, 
+                   labeller = labeller(Exer = c(None="Nincs", Some="Kevés", Freq="Gyakori"))) + 
+        # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+        
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_10.png", plot = p1, 
+       units = "in", width = 6, height = 10, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 1.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+### Publikációkész ábra - 6.
+
+Elkészítjük a publikációkész ábrát. Most az egyes csoportok hisztogramját, simított hisztogramját és a normális eloszlás gorbéjét is egyetlen ábrán jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Height)) + 
+        # hisztogram kirajzolása
+        geom_histogram(aes(y=after_stat(density)), color = "black", fill = "#cccccc", binwidth = 5) + 
+        # simított hisztogram kirajzolása
+        ggh4x::stat_theodensity(linewidth=0.8, linetype="dashed") +
+        # simított hisztogram kirajzolása
+        geom_density(color = "black", linewidth=0.8) + 
+        # csoportosítás a testmozgás gyakorisága szerint
+        facet_wrap(~ Exer, ncol = 1, 
+                  labeller = labeller(Exer = c(None="Nincs", Some="Kevés", Freq="Gyakori"))) +
+          # tengelyfeliratok hozzáadása
+        labs(x = "Magasság", y=NULL) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/hisztogram_11.png", plot = p1, 
+       units = "in", width = 6, height = 10, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 1.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```

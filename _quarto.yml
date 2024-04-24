@@ -1,0 +1,68 @@
+project:
+  type: book
+  output-dir: docs
+
+editor: source
+lang: hu
+language: hungarian.yml
+toc-depth: 4
+  
+
+book:
+  title: "Publikációkész grafika R-ben"
+  author: "Abari Kálmán"
+  date: today
+  date-format: long
+  cover-image: cover.png
+  search: true
+  repo-url: https://github.com/abarik/pkgr/
+  site-url: https://abarik.github.io/pkgr/
+  downloads: [pdf]
+  chapters:
+    - index.qmd
+    - 01_bevezetes.qmd
+    - 02_telepites.qmd
+    - 03_hisztogram.qmd
+    - 04_dobozdiagram.qmd
+    - 05_oszlopdiagram.qmd
+    - 06_pontdiagram.qmd
+    - 07_atlagabra.qmd
+
+bibliography: references.bib
+
+# format:
+#   html:
+#     theme: cosmo
+#   pdf:
+#     documentclass: scrreprt
+  # docx: 
+  #   reference-doc: elemzes_template.docx
+
+csl: apa.csl
+
+format:
+  epub: 
+    epub-cover-image: cover.jpg
+  html:
+    theme: cosmo
+    # theme:
+    #   light: flatly
+    #   dark: darkly
+    # callout-appearance: simple
+    code-copy: true
+  pdf:
+    # documentclass: krantz
+    # include-in-header: latex/preamble.tex
+    # include-before-body: latex/before_body.tex
+    # include-after-body: latex/after_body.tex
+    # keep-tex: true
+    # callout-appearance: simple
+    # lof: true
+    # lot: true
+    documentclass: scrreprt
+  # docx: 
+  #   reference-doc: elemzes_template.docx
+  
+
+
+

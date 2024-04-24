@@ -1,0 +1,11 @@
+# Előszó {.unnumbered}
+
+Jelen jegyzet célja publikációkész ábrák létrehozásának támogatása. Számos eszközben végezhetünk statisztikai elemzéseket, de a minden igénynek eleget tevő ábrák készítésének lehetőségét ma talán a legjobban az R `{ggplot2}` csomagja támogatja. 
+
+Jelen dokumentumban a `{ggplot2}` csomag alapján adunk kész receptet az egyes ábrák létrehozására.
+
+
+
+
+
+

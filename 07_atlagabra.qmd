@@ -1,0 +1,513 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Átlagábrák
+
+## Átlagok egy faktor esetén
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Smoke` változó a dohányzásra vonatkozó kérdésre adott válaszokat tartalmazza. A `Pulse` változó a pulzust méri. Adjuk meg a pulzus átlagát a dohányzási szokás egyes csoportjaiban. Jelenítsük meg a 95%-os konfidencia intervallumot is.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke, ordered = T)   
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Pulse",
+                  split = "Smoke")
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most oszlopdiagramon ábrázoljuk az átlagokat és a hozzájuk tartozó 95%-os konfidencia intervallumot. Ehhez a `pointrange` geometriai elemet hívjuk segítségül.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # oszlop kirajzolása
+        stat_summary(fun=mean, geom="bar", fill="#dcdcdc", colour="black") + 
+        # hozzá tartozó konfidencia intervallum kirajzolása, pointrange
+        stat_summary(fun.data=mean_cl_normal, geom="pointrange") +
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_01.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most oszlopdiagramon ábrázoljuk az átlagokat és a hozzájuk tartozó 95%-os konfidencia intervallumot. Ehhez az `errorbar` geometriai elemet hívjuk segítségül.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # oszlop kirajzolása
+        stat_summary(fun=mean, geom="bar", fill="#dcdcdc", colour="black") + 
+        # hozzá tartozó konfidencia intervallum kirajzolása, errorbar
+        stat_summary(fun.data=mean_cl_normal, geom="errorbar", width=0.2) +
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_02.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most pontokkal ábrázoljuk az átlagokat. A 95%-os konfidencia intervallumot az `errorbar` segítségével hozzuk létre.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # konfidencia intervallum kirajzolása, errorbar 
+        stat_summary(fun.data=mean_cl_normal, geom="errorbar", width=0.2) +
+        # átlagok kirajzolása, pontokkal
+        stat_summary(fun=mean, geom="point", 
+                     size=2, shape=21, fill="#dcdcdc", colour="black") + 
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_03.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 4.
+
+Elkészítjük a publikációkész ábrát. Most pontokkal ábrázoljuk az átlagokat. A 95%-os konfidencia intervallumot az `errorbar` segítségével hozzuk létre. Az átlagokat vonallal is összekötjük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # konfidencia intervallum kirajzolása, errorbar 
+        stat_summary(fun.data=mean_cl_normal, geom="errorbar", width=0.2) +
+        # vonal megrajzolása
+        stat_summary(fun=mean, geom="line", aes(group=1),
+                     colour="black", linetype="dashed") +
+        # átlagok kirajzolása, pontokkal
+        stat_summary(fun=mean, geom="point", 
+                     size=2, shape=21, fill="#dcdcdc", colour="black") + 
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_04.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+## Átlagok két faktor esetén
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Smoke` változó a dohányzásra vonatkozó kérdésre adott válaszokat tartalmazza, a `Sex` változó a nemre vonatkozó információt tárolja. A `Pulse` változó a pulzust méri. Adjuk meg a pulzus átlagát a dohányzási szokás és a nem egyes csoportjaiban. Jelenítsük meg a 95%-os konfidencia intervallumot is.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a nem változó (`Sex`) nominális, így faktorrá kell alakítanunk,
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk,
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe,
+-   azokkal a személyekkel nem szeretnénk elemzést végezni, akiknek nincs megadva a nemük, így ezeket a sorokat kiszűrjük az adatbázisból.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Sex <- factor(d$Sex)       
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke)
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+# kiszűrjük azokat a személyeket,akiknek nincs megadva a nemük
+d <- d |> dplyr::filter(!is.na(Sex))
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Pulse",
+                  split = c("Smoke", "Sex"))
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most oszlopdiagramon ábrázoljuk az átlagokat és a hozzájuk tartozó 95%-os konfidencia intervallumot. Ehhez a `pointrange` geometriai elemet hívjuk segítségül.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse, fill=Sex)) + 
+        # oszlop kirajzolása
+        stat_summary(fun=mean, geom="bar", position="dodge", col="#656565") + 
+        # hozzá tartozó konfidencia intervallum kirajzolása, pointrange
+        stat_summary(fun.data=mean_cl_normal, geom="pointrange",
+                     position=position_dodge(width=0.90), show_guide = FALSE) +
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#DCDCDC", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus", fill="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw() +
+        # a jelmagyarázat pozíciójának beállítása
+        theme(legend.position = "top")
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_05.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most oszlopdiagramon ábrázoljuk az átlagokat és a hozzájuk tartozó 95%-os konfidencia intervallumot. Ehhez az `errorbar` geometriai elemet hívjuk segítségül.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse, fill=Sex)) + 
+        # oszlop kirajzolása
+        stat_summary(fun=mean, geom="bar", position="dodge", col="#656565") + 
+        # hozzá tartozó konfidencia intervallum kirajzolása, errorbar
+        stat_summary(fun.data=mean_cl_normal, geom="errorbar", width=0.2,
+                     position=position_dodge(width=0.90), show_guide = FALSE) +
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#DCDCDC", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus", fill="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw() +
+        # a jelmagyarázat pozíciójának beállítása
+        theme(legend.position = "top")
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_06.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most pontokkal ábrázoljuk az átlagokat. A 95%-os konfidencia intervallumot az `errorbar` segítségével hozzuk létre.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse, fill=Sex, shape=Sex)) + 
+        # hozzá tartozó konfidencia intervallum kirajzolása, errorbar
+        stat_summary(fun.data=mean_cl_normal, geom="errorbar", width=0.2,
+                     position=position_dodge(width=0.6), show_guide = FALSE) +
+        # átlagok kirajzolása, pontokkal
+        stat_summary(fun=mean, geom="point", position=position_dodge(width=0.6),
+                     size=2) + 
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#DCDCDC", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # a pont (shape) paraméterek beállítása
+        scale_shape_manual(values = c(21,22),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus", fill="Nem", shape="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw() +
+        # a jelmagyarázat pozíciójának beállítása
+        theme(legend.position = "top")
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_07.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 3.8
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 4.
+
+Elkészítjük a publikációkész ábrát. Most pontokkal ábrázoljuk az átlagokat. A 95%-os konfidencia intervallumot az `errorbar` segítségével hozzuk létre. Az átlagokat vonallal is összekötjük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse, 
+                         fill=Sex, shape=Sex)) + 
+        # vonal megrajzolása
+        stat_summary(fun=mean, geom="line", aes(group=Sex, linetype=Sex), 
+                     colour="black",position=position_dodge(width=0.2)) +
+        # hozzá tartozó konfidencia intervallum kirajzolása, errorbar
+        stat_summary(fun.data=mean_cl_normal, geom="errorbar", width=0.2,
+                     position=position_dodge(width=0.2), show_guide = FALSE) +
+        # átlagok kirajzolása, pontokkal
+        stat_summary(fun=mean, geom="point", position=position_dodge(width=0.2),
+                     size=2) + 
+        # az y tengely látható tartományának beállítása
+        coord_cartesian(ylim = c(0, 100)) +
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#DCDCDC", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # a pont (shape) paraméterek beálltása  
+        scale_shape_manual(values = c(21,22),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # a vonal (linetype) paraméterek beálltása
+        scale_linetype_manual(values = c(1,2),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus", 
+             fill="Nem", shape="Nem", linetype="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw() +
+        # a jelmagyarázat pozíciójának beállítása
+        theme(legend.position = "top")
+
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/atlagabra_08.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```

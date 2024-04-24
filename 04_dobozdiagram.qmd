@@ -1,0 +1,232 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Dobozdiagram
+
+## Dobozdiagram 1 faktorral
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza. A `Pulse` változó a pulzust tartalmazza. Készítsünk dobozdiagramot a pulzus változóra a dohányzási szokás figyelembevételével (`Smoke` változó).
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke, ordered = T)   
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Pulse",
+                  split = "Smoke")
+```
+
+### Publikációkész ábra
+
+Elkészítjük a publikációkész ábrát.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # dobozdiagram kirajzolása
+        geom_boxplot(fill="#DCDCDC") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/dobozdiagram_01.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5
+#| fig.asp: 0.5
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+## Dobozdiagram 2 faktorral
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza. A `Pulse` változó a pulzust tartalmazza. Készítsünk dobozdiagramot a pulzus változóra a dohányzási szokás (`Smoke` változó) és a nem (`Sex`) figyelembevételével.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+### Előkészítés elemzésre
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a nem változó (`Sex`) nominális, így faktorrá kell alakítanunk,
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk,
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe,
+-   azokkal a személyekkel nem szeretnénk elemzést végezni, akiknek nincs megadva a nemük, így ezeket a sorokat kiszűrjük az adatbázisból.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Sex <- factor(d$Sex)       
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke)
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+# kiszűrjük azokat a személyeket,akiknek nincs megadva a nemük
+d <- d |> dplyr::filter(!is.na(Sex))
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+library(jmv)
+jmv::descriptives(data = d,
+                  vars = "Pulse",
+                  split = c("Smoke","Sex"))
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Itt azt a megoldást választottuk, hogy a nem (`Sex`) szerint kettébontjuk az ábrát.
+
+```{r}
+#| tidy: FALSE
+ 
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) +
+        # dobozdiagram kirajzolása
+        geom_boxplot(fill="#DCDCDC") + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # panelekre osztjuk a rajzterületet a nem változó alapján
+        facet_wrap(~ Sex, nrow = 1, 
+                   labeller = labeller(Sex=c(Female="Nő", Male="Férfi"))) +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/dobozdiagram_02.png", plot = p1, 
+       units = "in", width = 7, height = 7*0.5, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.5
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Itt egyetlen ábrán jelenítjük meg a dohányzási szokásokat és a nemeket.
+
+```{r}
+#| tidy: FALSE
+ 
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse, fill=Sex)) +
+        # dobozdiagram kirajzolása
+        geom_boxplot() + 
+        # az x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # a kitöltés (fill) paraméterek beálltása
+        scale_fill_manual(values = c("#DCDCDC", "#A9A9A9"),
+                          label=c(Female="Nő", Male="Férfi")) +
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus", fill="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw() +
+        # a jelmagyarázat pozíciójának beállítása
+        theme(legend.position = "top")
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/dobozdiagram_03.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+```{r}
+#| fig.width: 4
+#| fig.asp: 0.6
+#| out.width: '58%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```

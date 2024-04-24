@@ -1,0 +1,57 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Szükséges csomagok
+
+Az első lépésben telepítenünk kell a `{ggplot2}` csomagot. Ezt a következő paranccsal tehetjük meg:
+
+```{r}
+#| eval: false
+
+# ggplot2 csomag telepítése
+install.packages("ggplot2") 
+```
+
+
+Az ábrák létrehozása során minimális adatmanipulációra is szükségünk lehet. Ezt a `{tidyverse}` csomag segítségével végezhetjük el. Telepítsük ezt a csomagot is a következő paranccsal:
+
+```{r}
+#| eval: false
+
+# a tidyverse csomag telepítése
+install.packages("tidyverse") 
+```
+
+
+Az ábrák létrehozását minden esetben az adatok beolvasása előzi meg. Az adatok beolvasására a `{rio}` csomagot használjuk. Telepítsük ezt a csomagot is a következő paranccsal:
+
+```{r}
+#| eval: false
+
+# a rio csomag telepítése
+install.packages("rio") 
+```
+
+További csomagok telepítésére is szükség van:
+
+```{r}
+#| eval: false
+
+# ggk4x csomag a normális eloszlás sűrűségfüggvényének kirajzolásához
+install.packages("ggh4x") 
+# jmv csomag a jamovi elemzések futtatásához
+install.packages("jmv") 
+# GGally csomag a az oszlopdiagramok helyes megjelenítéséhez
+install.packages("GGally")
+```
+
+Amennyiben szeretnénk kipróbálni a jegyzetben lévő R sorokat, használjuk a következő R parancsot, amely létrehozza azt az adatbázist, amelyet a jegyzetben használunk:
+
+```{r}
+#| eval: false
+
+rio::export(MASS::survey, "adat/survey.xlsx")
+```

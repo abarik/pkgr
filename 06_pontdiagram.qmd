@@ -1,0 +1,498 @@
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+# Pontdiagram
+
+
+## Egydimenziós pontdiagram
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Smoke` változó a dohányzásra vonatkozó kérdésre adott válaszokat tartalmazza. A `Pulse` változó a pulzust méri. Rajzoljuk meg a pulzus nyers pontjait a dohányzási szokás egyes kategóriáiban, adjuk meg az átlagot és a mediánt is.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a dohányzási szokásokat tartalmazó változó (`Smoke`) ordinális, így faktorrá kell alakítanunk
+-   rendezzük az ordinálissá alakított `Smoke` változó szintjeit a természetes sorrendbe.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Smoke <- factor(d$Smoke, ordered = T)   
+# faktor szintjeinek rendezése
+d$Smoke <- forcats::fct_relevel(d$Smoke, "Never", "Occas", "Regul", "Heavy")
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Pulse",
+                  split = "Smoke")
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amelyben a pontokat egy kis eltolással jelenítjük meg, hogy az egymást átfedő pontok lehetőleg ne takarják ki egymást. A pontokat áttetszőre rajzoltuk, hogy az egymásra rajzolt pontok sűrűsége is látható legyen. Az átlagot és a mediánt is megjelenítjük. Az átlagot egy nagy szürke ponttal, a mediánt egy fekete vonallal jelöljük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # pontdiagram kirajzolása, véletlen x irányú eltolással
+        geom_jitter(width = 0.1, height = 0, alpha=0.4) + 
+        # átlag megjelenítése egy nagy szürke ponttal
+        stat_summary(fun = mean, geom = "point", 
+                     size=5, shape=21, fill="#dcdcdc", col="black",
+                     position = position_dodge(width = 0.5)) +
+        # medián megjelenítése egy fekete vonallal
+        stat_summary(fun=median, fun.min=median, fun.max=median, 
+                     geom="crossbar", col="black",
+                     position = position_dodge(width = 0.5)) +
+        # x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_01.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most olyan megjelenítést választottunk, amely a pontok egymásra rajzolását a lehetőség szerint elkerüli. A pontokat áttetszőre rajzoltuk, hogy az egymásra rajzolt pontok sűrűsége is látható legyen. Az átlagot és a mediánt is megjelenítjük. Az átlagot egy nagy szürke ponttal, a mediánt egy fekete vonallal jelöljük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# a p1 objektuma rajzolunk
+p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) + 
+        # pontok kirajzolása, egymásra rajzolás elkerülése
+        ggbeeswarm::geom_quasirandom(alpha=0.4) + 
+        # átlag megjelenítése egy nagy szürke ponttal
+        stat_summary(fun = mean, geom = "point", 
+                     size=5, shape=21, fill="#dcdcdc", col="black",
+                          position = position_dodge(width = 0.5)) +
+        # medián megjelenítése egy fekete vonallal
+        stat_summary(fun=median, fun.min=median, fun.max=median, 
+                     geom="crossbar", col="black",
+                     position = position_dodge(width = 0.5)) +
+        # x tengely beállítása
+        scale_x_discrete(na.translate = FALSE, 
+                         labels=c(Never="Soha", 
+                                  Occas="Alkalmi", 
+                                  Regul="Rendszeres",
+                                  Heavy="Erős")) + 
+        # feliratok hozzáadása
+        labs(x = "Dohányzás", y = "Pulzus") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_02.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+## Kétdimenziós pontdiagram - csoportosítás nélkül
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Height` változó a magasságot tartalmazza cm-ben, míg a `NW.Hnd` annak a kezünknek a méretét, amelyikkel nem szoktunk írni. Készítsünk kétdimenziós pontdiagramot a testmagasság és a kéz hossza változók kapcsolatának vizsgálatára.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Azonban ez nem minden adatbázis esetén szükséges, ebben az esetben sem.
+
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = c("Height","NW.Hnd"))
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most csupán a pontokat jelenítjük meg.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# p1 - kétdimenziós pontdiagram
+p1 <- ggplot(data=d, aes(x=Height, y=NW.Hnd)) + 
+        # pontok kirajzolása
+        geom_point(shape=21, size=2, fill="#7c7c7c", col="black", alpha=0.4) + 
+          # feliratok hozzáadása
+        labs(x = "Testmagasság (cm)", y = "Kézméret (cm, nem írunk)") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_03.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most a pontok mellett a lineáris regressziós egyenest is megjelenítjük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# p1 - kétdimenziós pontdiagram
+p1 <- ggplot(data=d, aes(x=Height, y=NW.Hnd)) + 
+        # pontok kirajzolása
+        geom_point(shape=21, size=2, fill="#7c7c7c", col="black", alpha=0.4) + 
+        # a regressziós egyenes
+        geom_smooth(method = "lm", se=F, colour="black", linewidth=0.8) +
+        # feliratok hozzáadása
+        labs(x = "Testmagasság (cm)", y = "Kézméret (cm, nem írunk)") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_04.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most pontok és a lineáris regressziós egyenes megjelenítése mellett egy görbeillesztést is elvégzünk.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# p1 - kétdimenziós pontdiagram
+p1 <- ggplot(data=d, aes(x=Height, y=NW.Hnd)) + 
+        # pontok kirajzolása
+        geom_point(shape=21, size=2, fill="#7c7c7c", col="black", alpha=0.4) + 
+        # a regressziós egyenes
+        geom_smooth(method = "lm", se=F, colour="black", linewidth=0.8) +
+        # illesztés görbe segítségével
+        geom_smooth(method = "loess", se=F, colour="black", linetype="dashed", size=0.8) +
+        # feliratok hozzáadása
+        labs(x = "Testmagasság (cm)", y = "Kézméret (cm, nem írunk)") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_05.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+## Kétdimenziós pontdiagram - csoportosítással
+
+
+::: callout-note
+## Feladat
+
+A `survey.xlsx` 237 egyetemista adatát tartalmazza.  A `Height` változó a magasságot tartalmazza cm-ben, míg a `NW.Hnd` annak a kezünknek a méretét, amelyekkel nem szoktunk írni. A nem változó (`Sex`) figyelembevételével készítsünk kétdimenziós pontdiagramot a testmagasság és a kéz hossza változók kapcsolatának vizsgálatára.
+:::
+
+### Adatok beolvasása
+
+Elvégezzük az adatok beolvasását a `survey.xlsx` fájlból. Ha az adatok SPSS `.sav` formátumban állnak rendelkezésre, akkor a beolvasás ugyanígy történik.
+
+```{r}
+# Adatok beolvasása
+d <- rio::import(file = "adat/survey.xlsx")
+```
+
+
+### Előkészítés
+
+Elképzelhető, hogy adataink közvetlenül a beolvasás után még nincsenek elemezhető állapotban. Néhány előkészítő lépést most valóban el kell végeznünk, de ez nem minden adatbázis esetén szükséges:
+
+-   a nem változó (`Sex`) nominális, így faktorrá kell alakítanunk,
+-   azokkal a személyekkel nem szeretnénk elemzést végezni, akiknek nincs megadva a nemük, így ezeket a sorokat kiszűrjük az adatbázisból.
+
+```{r}
+library(tidyverse)
+# faktorrá alakítás
+d$Sex <- factor(d$Sex)       
+# kiszűrjük azokat a személyeket,akiknek nincs megadva a nemük
+d <- d |> dplyr::filter(!is.na(Sex))
+```
+
+### Elemzés
+
+Leíró statisztikai elemzés segítségével megnézzük, hogy milyen értékek ábrázolását fogjuk elvégezni.
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = "Sex",
+                  freq=T)
+```
+
+
+```{r}
+# leíró statisztikai mutatók a jmv csomag segítségével
+jmv::descriptives(data = d,
+                  vars = c("Height","NW.Hnd"),
+                  splitBy = "Sex")
+```
+
+### Publikációkész ábra - 1.
+
+Elkészítjük a publikációkész ábrát. Most csupán a pontokat jelenítjük meg, de a nem változó hatását is figyelembe vesszük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# p1 - kétdimenziós pontdiagram
+p1 <- ggplot(data=d, aes(x=Height, y=NW.Hnd, 
+                         col=Sex, shape=Sex)) + 
+        # pontok kirajzolása
+        geom_point(size=2) + 
+        # színek beállítása
+        scale_colour_manual(values=c("#acacac", "#3d3d3d"),
+          labels=c(Female="Nő", Male="Férfi")) +
+        # formák beállítása
+        scale_shape_discrete(labels=c(Female="Nő", Male="Férfi")) +
+        # feliratok hozzáadása
+        labs(x = "Testmagasság (cm)", y = "Kézméret (cm, nem írunk)",
+             color="Nem", shape="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_06.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 2.
+
+Elkészítjük a publikációkész ábrát. Most pontok mellett a lineáris regressziós egyenest is megjelenítjük. A nem változó hatását is figyelembe vesszük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+
+# p1 - kétdimenziós pontdiagram
+p1 <- ggplot(data=d, aes(x=Height, y=NW.Hnd, 
+                         col=Sex, shape=Sex, linetype=Sex)) + 
+        # pontok kirajzolása
+        geom_point(size=2) + 
+        # színek beállítása
+        scale_colour_manual(values=c("#acacac", "#3d3d3d"),
+          labels=c(Female="Nő", Male="Férfi")) +
+        # formák beállítása
+        scale_shape_discrete(labels=c(Female="Nő", Male="Férfi")) +
+        # vonaltípus beállítása
+        scale_linetype_discrete(labels=c(Female="Nő", Male="Férfi")) +
+        # a regressziós egyenes
+        geom_smooth(method = "lm", se=F, colour="black", linewidth=0.8) +
+        # feliratok hozzáadása
+        labs(x = "Testmagasság (cm)", y = "Kézméret (cm, nem írunk)",
+             color="Nem", shape="Nem", linetype="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_07.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
+
+
+### Publikációkész ábra - 3.
+
+Elkészítjük a publikációkész ábrát. Most pontok és a lineáris regressziós egyenes megjelenítése mellett egy görbeillesztést is elvégzünk. A nem változó hatását is figyelembe vesszük.
+
+```{r}
+#| tidy: FALSE
+
+# ggplot2 csomagok betöltése
+library(ggplot2)
+
+# p1 - kétdimenziós pontdiagram
+p1 <- ggplot(data=d, aes(x=Height, y=NW.Hnd, 
+                         col=Sex, shape=Sex, linetype=Sex)) + 
+        # pontok kirajzolása
+        geom_point(size=2) + 
+        # színek beállítása
+        scale_colour_manual(values=c("#acacac", "#3d3d3d"),
+          labels=c(Female="Nő", Male="Férfi")) +
+        # formák beállítása
+        scale_shape_discrete(labels=c(Female="Nő", Male="Férfi")) +
+        # vonaltípus beállítása
+        scale_linetype_discrete(labels=c(Female="Nő", Male="Férfi")) +
+        # a regressziós egyenes
+        geom_smooth(method = "lm", se=F, colour="black", linewidth=0.8) +
+        # illesztés görbe segítségével
+        geom_smooth(method = "loess", se=F, colour="black", size=0.8) +
+        # feliratok hozzáadása
+        labs(x = "Testmagasság (cm)", y = "Kézméret (cm, nem írunk)",
+             color="Nem", shape="Nem", linetype="Nem") +
+        # fekete-fehér stílus hozzáadása
+        theme_bw()
+
+# p1 # a p1 ábra kirajzolása
+
+# a p1 ábra mentése
+ggsave("output/kep/pontdiagram_08.png", plot = p1, 
+       units = "in", width = 6, height = 6*0.6, dpi = 300, scale = 0.8)
+```
+
+
+```{r}
+#| fig.width: 5.1
+#| fig.asp: 0.7
+#| out.width: '68%'
+#| fig.align: center
+
+p1 # a p1 ábra kirajzolása a képernyőre
+```
