@@ -1,0 +1,49 @@
+\PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
+%\usepackage[utf8]{inputenc}
+\usepackage[magyar]{babel}
+%\usepackage{t1enc}
+
+
+\usepackage{booktabs}
+
+\newenvironment{rmdblock}[1]
+  {\begin{shaded*}
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{images/#1}}
+    }
+  }
+  \item
+  }
+  {
+  \end{itemize}
+  \end{shaded*}
+  }
+\newenvironment{rmdnote}
+  {\begin{rmdblock}{note}}
+  {\end{rmdblock}}
+\newenvironment{rmdtip}
+  {\begin{rmdblock}{tip}}
+  {\end{rmdblock}}
+\newenvironment{rmdwarning}
+  {\begin{rmdblock}{warning}}
+  {\end{rmdblock}}
+
+
+\newenvironment{rmdlevel1}
+  {\begin{rmdblock}{level1}}
+  {\end{rmdblock}}
+\newenvironment{rmdlevel2}
+  {\begin{rmdblock}{level2}}
+  {\end{rmdblock}}
+\newenvironment{rmdlevel3}
+  {\begin{rmdblock}{level3}}
+  {\end{rmdblock}}
+\newenvironment{rmdsummary}
+  {\begin{rmdblock}{summary}}
+  {\end{rmdblock}}
+ \newenvironment{rmdexercise}
+  {\begin{rmdblock}{exercise}}
+  {\end{rmdblock}}
+
