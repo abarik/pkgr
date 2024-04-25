@@ -236,43 +236,43 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, halmozás
 
-<figure><img src="output/kep/oszlopdiagram_03.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_03.png" width="400"></figure>
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, halmozás
 
-<figure><img src="output/kep/oszlopdiagram_04.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_04.png" width="400"></figure>
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_05.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_05.png" width="550"></figure>
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_06.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_06.png" width="550"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), halmozás
 
-<figure><img src="output/kep/oszlopdiagram_07.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_07.png" width="400"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), halmozás
 
-<figure><img src="output/kep/oszlopdiagram_08.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_08.png" width="400"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_09.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_09.png" width="550"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_10.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_10.png" width="550"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság, soronként vett, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_11.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_11.png" width="550"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság, soronként vett, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_12.png" width="500"></figure>
+<figure><img src="output/kep/oszlopdiagram_12.png" width="550"></figure>
 
 
 ### Pontdiagramok
