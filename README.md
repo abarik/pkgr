@@ -6,7 +6,7 @@ Ez a jegyzet bemutatja, hogyan készíthetünk különböző típusú ábrákat 
 - [oszlopdiagram](#oszlopdiagram)
 - [dobozdiagram](#dobozdiagram)
 - [pontdiagram](#pontdiagram)
-- [átlagábra]().
+- [átlagábra](#%C3%A1tlag%C3%A1br%C3%A1k).
 
 A jegyzet a következő linken érhető el: <https://abarik.github.io/pkgr/>
 
