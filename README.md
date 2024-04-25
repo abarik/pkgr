@@ -57,6 +57,7 @@ A jegyzetben a következő ábrák létrehozására találunk kész receptet:
     </figcaption>
 </figure>
 
+----
 
 <figure>
     <img src="output/kep/hisztogram_02.png" 
