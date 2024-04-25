@@ -218,11 +218,11 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 - Dobozdiagram több csoportra, két faktor, külön ábrán
 
-<figure><img src="output/kep/dobozdiagram_02.png" width="400"></figure>
+<figure><img src="output/kep/dobozdiagram_02.png" width="500"></figure>
 
 - Dobozdiagram több csoportra, két faktor, egy ábrán
 
-<figure><img src="output/kep/dobozdiagram_03.png" width="400"></figure>
+<figure><img src="output/kep/dobozdiagram_03.png" width="500"></figure>
 
 ### Oszlopdiagram
 
