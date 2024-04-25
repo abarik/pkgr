@@ -171,18 +171,53 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 - Simított hisztogram egy csoportra
 
 <figure><img src="output/kep/hisztogram_02.png" width="400"></figure>
+
+- Hisztogram és simított hisztogram egy csoportra
+
 <figure><img src="output/kep/hisztogram_03.png" width="400"></figure>
+
+- Simított hisztogram és normális eloszlás görbe egy csoportra
+
 <figure><img src="output/kep/hisztogram_04.png" width="400"></figure>
+
+- Hisztogram, simított hisztogram és normális eloszlás görbe egy csoportra
+
 <figure><img src="output/kep/hisztogram_05.png" width="400"></figure>
-<figure><img src="output/kep/hisztogram_06.png" width="400"></figure>
+
+- Hisztogram több csoportra
+
+<figure><img src="output/kep/hisztogram_06.png" width="300"></figure>
+
+- Simított hisztogram több csoportra
+
 <figure><img src="output/kep/hisztogram_07.png" width="400"></figure>
+
+- Simított hisztogram több csoportra, egy ábrán
+
 <figure><img src="output/kep/hisztogram_08.png" width="400"></figure>
+
+- Hisztogram és simított hisztogram több csoportra
+
 <figure><img src="output/kep/hisztogram_09.png" width="400"></figure>
+
+- Hisztogram és normális eloszlás görbe több csoportra
+
 <figure><img src="output/kep/hisztogram_10.png" width="400"></figure>
+
+- Hisztogram, simított hisztogram és normális eloszlás görbe több csoportra
+
 <figure><img src="output/kep/hisztogram_11.png" width="400"></figure>
 
+- Dobozdiagram több csoportra, egy faktor
+
 <figure><img src="output/kep/dobozdiagram_01.png" width="400"></figure>
+
+- Dobozdiagram több csoportra, két faktor, külön ábrán
+
 <figure><img src="output/kep/dobozdiagram_02.png" width="400"></figure>
+
+- Dobozdiagram több csoportra, két faktor, egy ábrán
+
 <figure><img src="output/kep/dobozdiagram_03.png" width="400"></figure>
 
 <figure><img src="output/kep/oszlopdiagram_01.png" width="400"></figure>
