@@ -120,7 +120,7 @@ scale_x_discrete(na.translate = FALSE,
 ```
 
 
-  Beállítjuk a tengelyek feliratát
+  2.4. Beállítjuk a tengelyek feliratát
 
 ```r
 # eredeti sor
@@ -130,7 +130,7 @@ labs(x = "<X_TENGELY_FELIRAT>", y = "<Y_TENGELY_FELIRAT>") +
 ```  
 
 
-  Ellenőrizzük az ábrát a képernyőn, kivesszük a megjegyzésből a képernyőn történő megjelenítést.
+  2.5. Ellenőrizzük az ábrát a képernyőn, kivesszük a megjegyzésből a képernyőn történő megjelenítést.
 
 ```r
 # eredeti sor
@@ -139,7 +139,7 @@ labs(x = "<X_TENGELY_FELIRAT>", y = "<Y_TENGELY_FELIRAT>") +
 p1 # a p1 ábra kirajzolása
 ```  
 
-  Beállítjuk a mentés paramétereit.
+  2.6. Beállítjuk a mentés paramétereit.
 
 ```r
 # eredeti sorok
@@ -152,7 +152,7 @@ ggsave("<KEPALLOMANY_ELERESI_UTJA>", plot = p1,
 ```  
   
 
-4. Futtajuk a kódot (például Ctrl+Enter-rel).
+**3. Futtajuk a kódot (például Ctrl+Enter-rel).**
 
 ## Szerző
 
@@ -161,31 +161,64 @@ Abari Kálmán (<abari.kalman@arts.unideb.hu>)
 
 ## Bemutató
 
-A jegyzetben a következő ábrák létrehozására találunk kész receptet:
-
-<figure>
-    <img src="output/kep/hisztogram_01.png" 
-         width="400" 
-         >
-    <figcaption>Hisztogram egy csoportra
-    </figcaption>
-</figure>
-
-----
-
-<figure>
-    <img src="output/kep/hisztogram_02.png" 
-         width="400" 
-         >
-    <figcaption>Simított isztogram egy csoportra
-    </figcaption>
-</figure>
+Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapján magunk is elkészíthetünk. 
 
 
-<figure>
-    <img src="output/kep/hisztogram_03.png" 
-         width="400" 
-         >
-    <figcaption>Hisztogram és simított hisztogram
-    </figcaption>
-</figure>
+- Hisztogram egy csoportra
+
+<figure><img src="output/kep/hisztogram_01.png" width="400"></figure>
+
+- Simított hisztogram egy csoportra
+
+<figure><img src="output/kep/hisztogram_02.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_03.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_04.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_05.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_06.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_07.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_08.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_09.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_10.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_11.png" width="400"></figure>
+
+<figure><img src="output/kep/dobozdiagram_01.png" width="400"></figure>
+<figure><img src="output/kep/dobozdiagram_02.png" width="400"></figure>
+<figure><img src="output/kep/dobozdiagram_03.png" width="400"></figure>
+
+<figure><img src="output/kep/oszlopdiagram_01.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_02.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_03.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_04.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_05.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_06.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_07.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_08.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_09.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_10.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_11.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_12.png" width="400"></figure>
+
+<figure><img src="output/kep/pontdiagram_01.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_02.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_03.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_04.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_05.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_06.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_07.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_08.png" width="400"></figure>
+
+<figure><img src="output/kep/atlagabra_01.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_02.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_03.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_04.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_05.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_06.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_07.png" width="400"></figure>
+<figure><img src="output/kep/atlagabra_08.png" width="400"></figure>
+
+
+
+
+
+
+
