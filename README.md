@@ -2,7 +2,7 @@
 
 Ez a jegyzet bemutatja, hogyan készíthetünk különböző típusú ábrákat a `{ggplot2}` R csomag segítségével. A következő ábrák létrehozására adunk receptet:
 
-- hisztogram
+- [hisztogram](#hisztogram-%C3%A9s-bar%C3%A1tai)
 - oszlopdiagram
 - dobozdiagram
 - pontdiagram
