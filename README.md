@@ -3,10 +3,10 @@
 Ez a jegyzet bemutatja, hogyan készíthetünk különböző típusú ábrákat a `{ggplot2}` R csomag segítségével. A következő ábrák létrehozására adunk receptet:
 
 - [hisztogram](#hisztogram-%C3%A9s-bar%C3%A1tai)
-- oszlopdiagram
-- dobozdiagram
-- pontdiagram
-- átlagábra.
+- [oszlopdiagram](#oszlopdiagram)
+- [dobozdiagram](#dobozdiagram)
+- [pontdiagram](#pontdiagram)
+- [átlagábra]().
 
 A jegyzet a következő linken érhető el: <https://abarik.github.io/pkgr/>
 
@@ -176,15 +176,15 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 - Hisztogram és simított hisztogram egy csoportra
 
-<figure><img src="output/kep/hisztogram_03.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_03.png" width="300"></figure>
 
 - Simított hisztogram és normális eloszlás görbe egy csoportra
 
-<figure><img src="output/kep/hisztogram_04.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_04.png" width="300"></figure>
 
 - Hisztogram, simított hisztogram és normális eloszlás görbe egy csoportra
 
-<figure><img src="output/kep/hisztogram_05.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_05.png" width="300"></figure>
 
 - Hisztogram több csoportra
 
@@ -192,23 +192,23 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 - Simított hisztogram több csoportra
 
-<figure><img src="output/kep/hisztogram_07.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_07.png" width="300"></figure>
 
 - Simított hisztogram több csoportra, egy ábrán
 
-<figure><img src="output/kep/hisztogram_08.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_08.png" width="300"></figure>
 
 - Hisztogram és simított hisztogram több csoportra
 
-<figure><img src="output/kep/hisztogram_09.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_09.png" width="300"></figure>
 
 - Hisztogram és normális eloszlás görbe több csoportra
 
-<figure><img src="output/kep/hisztogram_10.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_10.png" width="300"></figure>
 
 - Hisztogram, simított hisztogram és normális eloszlás görbe több csoportra
 
-<figure><img src="output/kep/hisztogram_11.png" width="400"></figure>
+<figure><img src="output/kep/hisztogram_11.png" width="300"></figure>
 
 ### Dobozdiagram
 
