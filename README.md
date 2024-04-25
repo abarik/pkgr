@@ -49,11 +49,28 @@ Abari Kálmán (<abari.kalman@arts.unideb.hu>)
 
 A jegyzetben a következő ábrák létrehozására találunk kész receptet:
 
-
-
 <figure>
     <img src="output/kep/hisztogram_01.png" 
          width="400" 
-         alt="Albuquerque, New Mexico">
-    <figcaption>A single track trail outside of Albuquerque, New Mexico.</figcaption>
+         >
+    <figcaption>Hisztogram egy csoportra
+    </figcaption>
+</figure>
+
+
+<figure>
+    <img src="output/kep/hisztogram_02.png" 
+         width="400" 
+         >
+    <figcaption>Simított isztogram egy csoportra
+    </figcaption>
+</figure>
+
+
+<figure>
+    <img src="output/kep/hisztogram_03.png" 
+         width="400" 
+         >
+    <figcaption>Hisztogram és simított hisztogram
+    </figcaption>
 </figure>
