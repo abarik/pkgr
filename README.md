@@ -38,7 +38,15 @@ rio::export(MASS::survey, "adat/survey.xlsx")
 
 ## Használat
 
-A jegyzet célja, hogy a `{ggplot2}` által biztosított eszközökkel a lehető legegyszerűbben illusztrálhassuk saját tudományos írásunkat. A bemutatott R-parancsokat úgy készítettük elő, hogy minimális változtatással alkalmas legyen a saját adataink alapján esztétikus ábra létrehozására.
+A jegyzet célja, hogy a `{ggplot2}` által biztosított eszközökkel a lehető legegyszerűbben illusztrálhassuk saját tudományos írásunkat. A bemutatott R-parancsokat úgy készítettük elő, hogy minimális változtatással alkalmas legyen a saját adataink alapján esztétikus ábra létrehozására. 
+
+Tegyük fel, hogy saját adataink alapján szeretnénk létrehozni a [7.1.6 fejezetben](https://abarik.github.io/pkgr/07_atlagabra.html#publik%C3%A1ci%C3%B3k%C3%A9sz-%C3%A1bra---3.) található átlagábrát:
+
+<figure>
+    <img src="output/kep/atlagabra_03.png" 
+         width="400" 
+         >
+</figure>
 
 ## Szerző
 
