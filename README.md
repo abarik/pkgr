@@ -4,4 +4,4 @@ A jegyzet célja műhelymunkák, szakdolgazatok és más tudományos írások il
 
 ## Hisztogram
 
-![](output/kep/hisztogram_01.png){width=4in}
+![](output/kep/hisztogram_01.png =x250)
