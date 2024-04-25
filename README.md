@@ -164,6 +164,7 @@ Abari Kálmán (<abari.kalman@arts.unideb.hu>)
 
 Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapján magunk is elkészíthetünk. 
 
+### Hisztogram és barátai
 
 - Hisztogram egy csoportra
 
@@ -209,6 +210,8 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/hisztogram_11.png" width="400"></figure>
 
+### Dobozdiagram
+
 - Dobozdiagram több csoportra, egy faktor
 
 <figure><img src="output/kep/dobozdiagram_01.png" width="400"></figure>
@@ -221,7 +224,7 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/dobozdiagram_03.png" width="400"></figure>
 
-### Oszlopdiagramok
+### Oszlopdiagram
 
 - Oszlopdiagram, egy faktor, abszolút gyakoriság
 
