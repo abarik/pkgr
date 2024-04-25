@@ -293,15 +293,15 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 - 2D pontdiagram, egy faktorral
 
-<figure><img src="output/kep/pontdiagram_06.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_06.png" width="500"></figure>
 
 - 2D pontdiagram, egy faktorral, regressziós egyenessel
 
-<figure><img src="output/kep/pontdiagram_07.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_07.png" width="500"></figure>
 
 - 2D pontdiagram, egy faktorral, regressziós egyenessel, és "loess" görbével
 
-<figure><img src="output/kep/pontdiagram_08.png" width="400"></figure>
+<figure><img src="output/kep/pontdiagram_08.png" width="500"></figure>
 
 
 - Átlagábra, egy faktor, oszlopdiagram, 95%-os CI, pointrange 
