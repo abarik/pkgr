@@ -221,6 +221,8 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/dobozdiagram_03.png" width="400"></figure>
 
+### Oszlopdiagramok
+
 - Oszlopdiagram, egy faktor, abszolút gyakoriság
 
 <figure><img src="output/kep/oszlopdiagram_01.png" width="400"></figure>
@@ -231,45 +233,46 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, halmozás
 
-<figure><img src="output/kep/oszlopdiagram_03.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_03.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, halmozás
 
-<figure><img src="output/kep/oszlopdiagram_04.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_04.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_05.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_05.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, abszolút gyakoriság, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_06.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_06.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), halmozás
 
-<figure><img src="output/kep/oszlopdiagram_07.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_07.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), halmozás
 
-<figure><img src="output/kep/oszlopdiagram_08.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_08.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_09.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_09.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság (totál), egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_10.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_10.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság, soronként vett, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_11.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_11.png" width="500"></figure>
 
 - Oszlopdiagram, két faktor, százalékos gyakoriság, soronként vett, egymás mellé
 
-<figure><img src="output/kep/oszlopdiagram_12.png" width="400"></figure>
+<figure><img src="output/kep/oszlopdiagram_12.png" width="500"></figure>
 
 
+### Pontdiagramok
 
 - 1D pontdiagram, egy faktor
 
@@ -303,6 +306,8 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/pontdiagram_08.png" width="500"></figure>
 
+
+### Átlagábrák
 
 - Átlagábra, egy faktor, oszlopdiagram, 95%-os CI, pointrange 
   
