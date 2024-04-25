@@ -236,7 +236,7 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/oszlopdiagram_04.png" width="400"></figure>
 
-- Oszlopdiagram, két faktor, abszolút gyakoriság, halmozás
+- Oszlopdiagram, két faktor, abszolút gyakoriság, egymás mellé
 
 <figure><img src="output/kep/oszlopdiagram_05.png" width="400"></figure>
 
@@ -244,11 +244,11 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/oszlopdiagram_06.png" width="400"></figure>
 
-- Oszlopdiagram, két faktor, abszolút gyakoriság, egymás mellé
+- Oszlopdiagram, két faktor, százalékos gyakoriság (totál), halmozás
 
 <figure><img src="output/kep/oszlopdiagram_07.png" width="400"></figure>
 
-- Oszlopdiagram, két faktor, százalékos gyakoriság, halmozás
+- Oszlopdiagram, két faktor, százalékos gyakoriság (totál), halmozás
 
 <figure><img src="output/kep/oszlopdiagram_08.png" width="400"></figure>
 
