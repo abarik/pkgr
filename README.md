@@ -90,7 +90,8 @@ ggsave("output/kep/atlagabra_03.png", plot = p1,
 # eredeti sor
 p1 <- ggplot(data=d, aes(x=Smoke, y=Pulse)) +
 # átírt sor
-p1 <- ggplot(data=<SAJAT_ADATBAZIS_OBJEKTUM>, aes(x=<SAJAT_KATEGORIKUS_VALTOZO>, y=<SAJAT_NUMERIKUS_VALTOZO>)) + 
+p1 <- ggplot(data=<SAJAT_ADATBAZIS_OBJEKTUM>,
+             aes(x=<SAJAT_KATEGORIKUS_VALTOZO>, y=<SAJAT_NUMERIKUS_VALTOZO>)) + 
 ```
 
   2.2. Beállítjuk a saját adatinkra az y tengely láthatóságát.
@@ -268,22 +269,71 @@ Felsoroljuk azokat az ábrákat, amelyeket a jegyzetben található R kód alapj
 
 <figure><img src="output/kep/oszlopdiagram_12.png" width="400"></figure>
 
+
+
+- 1D pontdiagram, egy faktor
+
 <figure><img src="output/kep/pontdiagram_01.png" width="400"></figure>
+
+- 1D pontdiagram, egy faktor
+
 <figure><img src="output/kep/pontdiagram_02.png" width="400"></figure>
+
+- 2D pontdiagram
+
 <figure><img src="output/kep/pontdiagram_03.png" width="400"></figure>
+
+- 2D pontdiagram, regressziós egyenessel
+
 <figure><img src="output/kep/pontdiagram_04.png" width="400"></figure>
+
+- 2D pontdiagram, regressziós egyenessel, és "loess" görbével
+
 <figure><img src="output/kep/pontdiagram_05.png" width="400"></figure>
+
+- 2D pontdiagram, egy faktorral
+
 <figure><img src="output/kep/pontdiagram_06.png" width="400"></figure>
+
+- 2D pontdiagram, egy faktorral, regressziós egyenessel
+
 <figure><img src="output/kep/pontdiagram_07.png" width="400"></figure>
+
+- 2D pontdiagram, egy faktorral, regressziós egyenessel, és "loess" görbével
+
 <figure><img src="output/kep/pontdiagram_08.png" width="400"></figure>
 
+
+- Átlagábra, egy faktor, oszlopdiagram, 95%-os CI, pointrange 
+  
 <figure><img src="output/kep/atlagabra_01.png" width="400"></figure>
+
+- Átlagábra, egy faktor, oszlopdiagram, 95%-os CI, errorbar 
+
 <figure><img src="output/kep/atlagabra_02.png" width="400"></figure>
+
+- Átlagábra, egy faktor, 95%-os CI, errorbar 
+
 <figure><img src="output/kep/atlagabra_03.png" width="400"></figure>
+
+- Átlagábra, egy faktor, 95%-os CI, errorbar, vonallal
+
 <figure><img src="output/kep/atlagabra_04.png" width="400"></figure>
+
+- Átlagábra, két faktor, oszlopdiagram, 95%-os CI, pointrange
+
 <figure><img src="output/kep/atlagabra_05.png" width="400"></figure>
+
+- Átlagábra, két faktor, oszlopdiagram, 95%-os CI, errorbar
+
 <figure><img src="output/kep/atlagabra_06.png" width="400"></figure>
+
+- Átlagábra, két faktor, 95%-os CI, errorbar
+
 <figure><img src="output/kep/atlagabra_07.png" width="400"></figure>
+
+- Átlagábra, két faktor, 95%-os CI, errorbar, vonallal
+
 <figure><img src="output/kep/atlagabra_08.png" width="400"></figure>
 
 
