@@ -4,4 +4,9 @@ A jegyzet célja műhelymunkák, szakdolgazatok és más tudományos írások il
 
 ## Hisztogram
 
-![](output/kep/hisztogram_01.png =x250)
+<figure>
+    <img src="output/kep/hisztogram_01.png" 
+         width="200" 
+         alt="Albuquerque, New Mexico">
+    <figcaption>A single track trail outside of Albuquerque, New Mexico.</figcaption>
+</figure>
